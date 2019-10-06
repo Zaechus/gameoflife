@@ -37,14 +37,13 @@ impl Grid {
 
     fn print(&self) {
         print!("{}{}", termion::clear::All, termion::cursor::Goto(1, 1));
+        stdout().flush().unwrap();
         for row in self.cells.borrow().iter() {
-            stdout().write(b"\r").unwrap();
             for cell in row {
                 match cell.is_alive() {
-                    false => stdout().write(b"  ").unwrap(),
-                    true => stdout().write(b"0 ").unwrap(),
+                    false => print!("  "),
+                    true => print!("0 "),
                 };
-                stdout().flush().unwrap();
             }
             println!("|");
         }
