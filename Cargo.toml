@@ -1,7 +1,10 @@
 [package]
-name = "gameoflife-cli"
+name = "gameoflife_cli"
 version = "0.1.0"
 authors = ["Maxwell Anderson <maxwell.brayden.anderson@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+rand = "0.7"
+term_size = "0.3"
+termion = "1.5"
