@@ -1,5 +1,5 @@
-mod cell;
+mod gamecell;
 mod grid;
 
-pub use cell::GameCell;
+pub use gamecell::GameCell;
 pub use grid::Grid;
