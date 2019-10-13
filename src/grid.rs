@@ -15,7 +15,7 @@ pub struct Grid {
 impl Grid {
     pub fn new(interval: u64) -> Self {
         let (w, h) = if let Some((w, h)) = term_size::dimensions() {
-            (w / 2, h - 1)
+            (w / 2 - 1, h - 1)
         } else {
             (80, 40)
         };
