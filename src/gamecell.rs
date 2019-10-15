@@ -1,15 +1,15 @@
-use std::cell::Cell;
+use std::sync::atomic::{AtomicBool, Ordering};
 
 pub struct GameCell {
     alive: bool,
-    will_live: Cell<bool>,
+    will_live: AtomicBool,
 }
 
 impl GameCell {
     pub fn new(alive: bool) -> Self {
         Self {
             alive,
-            will_live: Cell::new(false),
+            will_live: AtomicBool::new(false),
         }
     }
 
@@ -18,10 +18,10 @@ impl GameCell {
     }
 
     pub fn update(&mut self) {
-        self.alive = self.will_live.get()
+        self.alive = *self.will_live.get_mut()
     }
 
     pub fn set_will_live(&self, b: bool) {
-        self.will_live.set(b);
+        self.will_live.store(b, Ordering::Relaxed)
     }
 }

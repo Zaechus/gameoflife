@@ -1,7 +1,7 @@
-use gameoflife_cli::Grid;
+use gameoflife_cli::ConwaysGame;
 
 fn main() {
-    let grid = Grid::new(100);
+    let game = ConwaysGame::new(100);
 
-    grid.play()
+    game.play()
 }

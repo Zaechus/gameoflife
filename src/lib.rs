@@ -1,5 +1,5 @@
+mod game;
 mod gamecell;
 mod grid;
 
-pub use gamecell::GameCell;
-pub use grid::Grid;
+pub use game::ConwaysGame;
