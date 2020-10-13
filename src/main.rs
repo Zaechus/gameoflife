@@ -1,4 +1,4 @@
-use gameoflife_cli::ConwaysGame;
+use gameoflife::ConwaysGame;
 
 fn main() {
     let game = ConwaysGame::new(100);
