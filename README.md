@@ -1,5 +1,5 @@
 # gameoflife-cli
 
-[![Current Crates.io Version](https://img.shields.io/crates/v/gameoflife_cli)](https://crates.io/crates/gameoflife_cli)
+[![Current Crates.io Version](https://img.shields.io/crates/v/gameoflife)](https://crates.io/crates/gameoflife)
 
 Conway's Game of Life running in a terminal window
