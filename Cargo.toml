@@ -1,14 +1,14 @@
 [package]
 name = "gameoflife"
 description = "Conway's Game of Life running in a terminal window"
-version = "0.3.1"
+version = "1.0.0"
 authors = ["Maxwell Anderson <maxwell.brayden.anderson@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/Maxgy/gameoflife-cli"
 license = "MIT"
 
 [dependencies]
+crossterm = "0.18"
+ctrlc = "3.1"
 rand = "0.7"
 rayon = "1.0"
-term_size = "0.3"
-termion = "1.5"
