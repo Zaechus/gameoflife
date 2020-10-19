@@ -1,6 +1,9 @@
-use std::io::{stdout, Write};
+use std::{
+    io::{stdout, Write},
+    sync::{Arc, Mutex},
+};
 
-use crossterm::{cursor, execute, queue, style, terminal};
+use crossterm::{cursor, execute, style, terminal};
 
 use rayon::prelude::*;
 
@@ -8,6 +11,8 @@ use crate::gamecell::GameCell;
 
 pub struct Grid {
     cells: Vec<Vec<GameCell>>,
+    buffer: Arc<Mutex<Vec<Vec<char>>>>,
+    render: String,
     w: usize,
     h: usize,
     interval: u32,
@@ -20,6 +25,7 @@ impl Grid {
         } else {
             (80, 40)
         };
+
         let cells = vec![vec![0; w]; h]
             .par_iter()
             .map(|v| {
@@ -37,6 +43,8 @@ impl Grid {
         .unwrap();
         Self {
             cells,
+            buffer: Arc::new(Mutex::new(vec![vec![' '; w + 1]; h])),
+            render: String::with_capacity((w + 1) * h),
             w,
             h,
             interval,
@@ -47,27 +55,27 @@ impl Grid {
         self.interval
     }
 
-    pub fn print(&self) -> crossterm::Result<()> {
+    pub fn print(&mut self) -> crossterm::Result<()> {
         let mut stdout = stdout();
 
-        for (y, row) in self.cells.iter().enumerate() {
-            for (x, cell) in row.iter().enumerate() {
+        execute!(stdout, cursor::MoveTo(0, 0))?;
+        self.cells.par_iter().enumerate().for_each(|(y, row)| {
+            row.par_iter().enumerate().for_each(|(x, cell)| {
                 if cell.is_alive() {
-                    queue!(
-                        stdout,
-                        cursor::MoveTo(x as u16, y as u16),
-                        style::Print("█")
-                    )?;
+                    self.buffer.lock().unwrap()[y][x] = '█';
                 } else {
-                    queue!(
-                        stdout,
-                        cursor::MoveTo(x as u16, y as u16),
-                        style::Print(" ")
-                    )?;
+                    self.buffer.lock().unwrap()[y][x] = ' ';
                 }
-            }
+            });
+            self.buffer.lock().unwrap()[y][self.w] = '\n'
+        });
+
+        self.render = String::with_capacity((self.w + 1) * self.h);
+        for row in self.buffer.lock().unwrap().iter() {
+            self.render.push_str(&row.iter().collect::<String>());
         }
-        stdout.flush()?;
+        execute!(stdout, style::Print(&self.render))?;
+
         Ok(())
     }
 

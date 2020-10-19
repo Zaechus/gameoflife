@@ -33,7 +33,7 @@ impl ConwaysGame {
         .expect("Error setting Ctrl-C handler");
 
         loop {
-            self.grid.borrow().print().unwrap();
+            self.grid.borrow_mut().print().unwrap();
             self.grid.borrow_mut().change_cells();
             self.grid.borrow_mut().update_cells();
 
