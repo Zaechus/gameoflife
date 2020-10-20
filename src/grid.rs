@@ -65,10 +65,9 @@ impl Grid {
             self.buffer.lock().unwrap()[y * self.w + self.w + y] = '\n';
         });
 
-        execute!(
-            stdout,
-            style::Print(&self.buffer.lock().unwrap().iter().collect::<String>())
-        )?;
+        if let Ok(rendered) = self.buffer.lock() {
+            execute!(stdout, style::Print(rendered.iter().collect::<String>()))?;
+        }
 
         Ok(())
     }
