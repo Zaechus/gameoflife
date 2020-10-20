@@ -1,7 +1,7 @@
 [package]
 name = "gameoflife"
 description = "Conway's Game of Life running in a terminal window"
-version = "1.0.2"
+version = "1.0.3"
 authors = ["Maxwell Anderson <maxwell.brayden.anderson@gmail.com>"]
 edition = "2018"
 repository = "https://github.com/Maxgy/gameoflife-cli"
