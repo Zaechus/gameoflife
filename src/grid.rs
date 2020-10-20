@@ -11,8 +11,7 @@ use crate::gamecell::GameCell;
 
 pub struct Grid {
     cells: Vec<Vec<GameCell>>,
-    buffer: Arc<Mutex<Vec<Vec<char>>>>,
-    render: String,
+    buffer: Arc<Mutex<Vec<char>>>,
     w: usize,
     h: usize,
     interval: u32,
@@ -43,8 +42,7 @@ impl Grid {
         .unwrap();
         Self {
             cells,
-            buffer: Arc::new(Mutex::new(vec![vec![' '; w + 1]; h])),
-            render: String::with_capacity((w + 1) * h),
+            buffer: Arc::new(Mutex::new(vec![' '; (w + 1) * h])),
             w,
             h,
             interval,
@@ -60,21 +58,17 @@ impl Grid {
 
         execute!(stdout, cursor::MoveTo(0, 0))?;
         self.cells.par_iter().enumerate().for_each(|(y, row)| {
+            let offset = y * self.w + y;
             row.par_iter().enumerate().for_each(|(x, cell)| {
-                if cell.is_alive() {
-                    self.buffer.lock().unwrap()[y][x] = '█';
-                } else {
-                    self.buffer.lock().unwrap()[y][x] = ' ';
-                }
+                self.buffer.lock().unwrap()[offset + x] = if cell.is_alive() { '█' } else { ' ' };
             });
-            self.buffer.lock().unwrap()[y][self.w] = '\n'
+            self.buffer.lock().unwrap()[y * self.w + self.w + y] = '\n';
         });
 
-        self.render = String::with_capacity((self.w + 1) * self.h);
-        for row in self.buffer.lock().unwrap().iter() {
-            self.render.push_str(&row.iter().collect::<String>());
-        }
-        execute!(stdout, style::Print(&self.render))?;
+        execute!(
+            stdout,
+            style::Print(&self.buffer.lock().unwrap().iter().collect::<String>())
+        )?;
 
         Ok(())
     }
