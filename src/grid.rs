@@ -60,7 +60,7 @@ impl Grid {
         self.cells.par_iter().enumerate().for_each(|(y, row)| {
             let offset = y * self.w + y;
             row.par_iter().enumerate().for_each(|(x, cell)| {
-                self.buffer.lock().unwrap()[offset + x] = if cell.is_alive() { '█' } else { ' ' };
+                self.buffer.lock().unwrap()[offset + x] = cell.symbol();
             });
             self.buffer.lock().unwrap()[y * self.w + self.w + y] = '\n';
         });
@@ -81,32 +81,34 @@ impl Grid {
     pub fn change_cells(&mut self) {
         self.cells.par_iter().enumerate().for_each(|(y, row)| {
             row.par_iter().enumerate().for_each(|(x, cell)| {
-                let mut adjacent_count = 0;
+                let (top, bottom) = if y as i32 - 1 < 0 {
+                    (self.h - 1, y + 1)
+                } else if y + 1 >= self.h {
+                    (y - 1, 0)
+                } else {
+                    (y - 1, y + 1)
+                };
 
-                if y > 0 && self.cells[y - 1][x].is_alive() {
-                    adjacent_count += 1;
-                }
-                if y < self.h - 1 && self.cells[y + 1][x].is_alive() {
-                    adjacent_count += 1;
-                }
-                if x > 0 && self.cells[y][x - 1].is_alive() {
-                    adjacent_count += 1;
-                }
-                if x < self.w - 1 && self.cells[y][x + 1].is_alive() {
-                    adjacent_count += 1;
-                }
-                if x > 0 && y > 0 && self.cells[y - 1][x - 1].is_alive() {
-                    adjacent_count += 1;
-                }
-                if x < self.w - 1 && y < self.h - 1 && self.cells[y + 1][x + 1].is_alive() {
-                    adjacent_count += 1;
-                }
-                if x < self.w - 1 && y > 0 && self.cells[y - 1][x + 1].is_alive() {
-                    adjacent_count += 1;
-                }
-                if x > 0 && y < self.h - 1 && self.cells[y + 1][x - 1].is_alive() {
-                    adjacent_count += 1;
-                }
+                let (left, right) = if x as i32 - 1 < 0 {
+                    (self.w - 1, x + 1)
+                } else if x + 1 >= self.w {
+                    (x - 1, 0)
+                } else {
+                    (x - 1, x + 1)
+                };
+
+                let adjacent_count: u8 = [
+                    self.cells[top][x].state(),
+                    self.cells[bottom][x].state(),
+                    self.cells[y][left].state(),
+                    self.cells[y][right].state(),
+                    self.cells[top][left].state(),
+                    self.cells[top][right].state(),
+                    self.cells[bottom][left].state(),
+                    self.cells[bottom][right].state(),
+                ]
+                .iter()
+                .sum();
 
                 if cell.is_alive() && adjacent_count < 2 || cell.is_alive() && adjacent_count > 3 {
                     cell.set_will_live(false);

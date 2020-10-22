@@ -17,6 +17,18 @@ impl GameCell {
         self.alive
     }
 
+    pub fn state(&self) -> u8 {
+        self.alive as u8
+    }
+
+    pub fn symbol(&self) -> char {
+        if self.alive {
+            '█'
+        } else {
+            ' '
+        }
+    }
+
     pub fn update(&mut self) {
         self.alive = *self.will_live.get_mut()
     }
