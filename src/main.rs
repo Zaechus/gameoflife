@@ -10,10 +10,10 @@ fn main() {
         } else if let Ok(n) = arg.parse() {
             n
         } else {
-            100
+            128
         }
     } else {
-        100
+        128
     };
 
     let game = ConwaysGame::new(speed);
