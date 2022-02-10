@@ -1,9 +1,4 @@
-use std::{
-    cell::RefCell,
-    io::{stdout, Write},
-    process, thread,
-    time::Duration,
-};
+use std::{cell::RefCell, io::stdout, process, thread, time::Duration};
 
 use crossterm::{cursor, execute, terminal};
 
