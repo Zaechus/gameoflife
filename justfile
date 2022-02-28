@@ -1,9 +1,10 @@
 run:
-    cargo run --release
+    cargo run
 
 c:
+    cargo clippy
+
+up:
     cargo fmt
     cargo update
-
     cargo clippy
-    cargo c
