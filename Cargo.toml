@@ -2,13 +2,13 @@
 name = "gameoflife"
 version = "1.1.2"
 edition = "2021"
-authors = ["Maxwell Anderson <maxwell.anderson.public@protonmail.com>"]
+authors = ["Maxwell Anderson <zaechus@proton.me>"]
 license = "MIT"
-description = "Conway's Game of Life running in a terminal window"
-repository = "https://gitlab.com/Zaechus/gameoflife-cli"
+description = "Conway's Game of Life running in a terminal"
+repository = "https://github.com/Zaechus/gameoflife"
 
 [dependencies]
-crossterm = "0.23"
+crossterm = "0.26"
 ctrlc = "3.2"
 rand = "0.8"
-rayon = "1.5"
+rayon = "1.6"
