@@ -1,27 +1,27 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 
-pub struct GameCell {
+pub(crate) struct GameCell {
     alive: bool,
     will_live: AtomicBool,
 }
 
 impl GameCell {
-    pub fn new(alive: bool) -> Self {
+    pub(crate) fn new(alive: bool) -> Self {
         Self {
             alive,
             will_live: AtomicBool::new(false),
         }
     }
 
-    pub fn is_alive(&self) -> bool {
+    pub(crate) fn is_alive(&self) -> bool {
         self.alive
     }
 
-    pub fn state(&self) -> u8 {
+    pub(crate) fn state(&self) -> u8 {
         self.alive as u8
     }
 
-    pub fn symbol(&self) -> char {
+    pub(crate) fn symbol(&self) -> char {
         if self.alive {
             '█'
         } else {
@@ -29,11 +29,11 @@ impl GameCell {
         }
     }
 
-    pub fn update(&mut self) {
+    pub(crate) fn update(&mut self) {
         self.alive = *self.will_live.get_mut()
     }
 
-    pub fn set_will_live(&self, b: bool) {
+    pub(crate) fn set_will_live(&self, b: bool) {
         self.will_live.store(b, Ordering::Relaxed)
     }
 }

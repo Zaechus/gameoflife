@@ -1,38 +1,40 @@
-use std::{cell::RefCell, io::stdout, process, thread, time::Duration};
+use std::{io::stdout, process, thread, time::Duration};
 
 use crossterm::{cursor, execute, terminal};
 
 use crate::grid::Grid;
 
-pub struct ConwaysGame {
-    grid: RefCell<Grid>,
-}
+pub fn play(interval: u64) {
+    ctrlc::set_handler(move || {
+        execute!(
+            stdout(),
+            terminal::Clear(terminal::ClearType::All),
+            cursor::Show
+        )
+        .unwrap();
+        process::exit(0);
+    })
+    .unwrap();
 
-impl ConwaysGame {
-    pub fn new(interval: u32) -> Self {
-        Self {
-            grid: RefCell::new(Grid::new(interval)),
-        }
-    }
+    execute!(
+        stdout(),
+        terminal::Clear(terminal::ClearType::All),
+        cursor::Hide
+    )
+    .unwrap();
 
-    pub fn play(&self) {
-        ctrlc::set_handler(move || {
-            execute!(
-                stdout(),
-                terminal::Clear(terminal::ClearType::All),
-                cursor::Show
-            )
-            .unwrap();
-            process::exit(0);
-        })
-        .expect("Error setting Ctrl-C handler");
+    let mut grid = Grid::new();
 
-        loop {
-            self.grid.borrow_mut().print().unwrap();
-            self.grid.borrow_mut().change_cells();
-            self.grid.borrow_mut().update_cells();
+    loop {
+        grid.print().unwrap();
 
-            thread::sleep(Duration::from_millis(self.grid.borrow().interval() as u64));
-        }
+        let handle = thread::spawn(move || {
+            thread::sleep(Duration::from_millis(interval));
+        });
+
+        grid.change_cells();
+        grid.update_cells();
+
+        handle.join().unwrap();
     }
 }

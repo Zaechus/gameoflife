@@ -1,9 +1,7 @@
 use std::{env, process};
 
-use gameoflife::ConwaysGame;
-
 fn main() {
-    let speed: u32 = if let Some(arg) = env::args().nth(1) {
+    let interval = if let Some(arg) = env::args().nth(1) {
         if arg == "help" {
             println!("Usage: gameoflife [INTERVAL]");
             process::exit(0);
@@ -16,7 +14,5 @@ fn main() {
         128
     };
 
-    let game = ConwaysGame::new(speed);
-
-    game.play()
+    gameoflife::play(interval)
 }
