@@ -1,7 +1,6 @@
-use std::io::stdout;
+use std::io::{self, stdout};
 
 use crossterm::{cursor, execute, style, terminal};
-
 use rayon::prelude::*;
 
 use crate::gamecell::GameCell;
@@ -37,7 +36,7 @@ impl Grid {
         }
     }
 
-    pub(crate) fn print(&mut self) -> crossterm::Result<()> {
+    pub(crate) fn print(&mut self) -> io::Result<()> {
         execute!(
             stdout(),
             cursor::MoveTo(0, 0),

@@ -9,10 +9,10 @@ categories = ["games"]
 edition = "2021"
 
 [dependencies]
-crossterm = "0.26"
-ctrlc = "3.2"
+crossterm = "0.27"
+ctrlc = "3.4"
 rand = "0.8"
-rayon = "1.7"
+rayon = "1.10"
 
 [profile.release]
 panic = "abort"
